@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Регистрация - Medical App</title>
+
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-8">
+
+                <div class="card shadow-lg border-0 rounded-4">
+
+                    <div class="card-body p-5">
+
+                        <h1 class="text-primary mb-3">
+                            Регистрация
+                        </h1>
+
+                        <p class="text-muted mb-4">
+                            Създайте профил, за да можете да запазите час при лекар.
+                        </p>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Име</label>
+                                <input type="text" id="firstName" class="form-control" placeholder="Име">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Фамилия</label>
+                                <input type="text" id="lastName" class="form-control" placeholder="Фамилия">
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Имейл</label>
+                            <input type="email" id="email" class="form-control" placeholder="example@email.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Телефон</label>
+                            <div class="input-group">
+                                <span class="input-group-text">+359</span>
+                                <input type="text" id="phone" class="form-control" placeholder="Телефон">
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Област</label>
+                                <select id="city" class="form-select">
+                                    <option value="">Избери...</option>
+                                    <option value="Варна">Варна</option>
+                                    <option value="Пловдив">Пловдив</option>
+                                    <option value="София">София</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Дата на раждане</label>
+                                <input type="date" id="birthDate" class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Пол</label>
+                                <select id="gender" class="form-select">
+                                    <option value="">Избери...</option>
+                                    <option value="Жена">Жена</option>
+                                    <option value="Мъж">Мъж</option>
+                                    <option value="Предпочитам да не казвам">Предпочитам да не казвам</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="mb-3">
+                            <label class="form-label">Потребителско име</label>
+                            <input type="text" id="username" class="form-control" placeholder="Потребителско име">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Парола</label>
+                            <input type="password" id="password" class="form-control" placeholder="Парола">
+                            <small class="text-muted">
+                                Паролата трябва да е минимум 6 символа.
+                            </small>
+                        </div>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="terms">
+                            <label class="form-check-label" for="terms">
+                                Съгласен/съгласна съм с условията за ползване
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="privacy">
+                            <label class="form-check-label" for="privacy">
+                                Съгласен/съгласна съм с политиката за поверителност
+                            </label>
+                        </div>
+
+                        <button class="btn btn-success w-100 mb-3" onclick="register()">
+                            Регистрация
+                        </button>
+
+                        <button class="btn btn-outline-secondary w-100" onclick="goLogin()">
+                            Вече имам профил
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        async function register() {
+            const firstName = document.getElementById("firstName").value;
+            const lastName = document.getElementById("lastName").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+            const city = document.getElementById("city").value;
+            const birthDate = document.getElementById("birthDate").value;
+            const gender = document.getElementById("gender").value;
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const terms = document.getElementById("terms").checked;
+            const privacy = document.getElementById("privacy").checked;
+
+            if (
+                firstName === "" ||
+                lastName === "" ||
+                email === "" ||
+                phone === "" ||
+                city === "" ||
+                birthDate === "" ||
+                gender === "" ||
+                username === "" ||
+                password === ""
+            ) {
+                alert("Попълни всички полета");
+                return;
+            }
+
+            if (password.length < 6) {
+                alert("Паролата трябва да е минимум 6 символа");
+                return;
+            }
+
+            if (!terms || !privacy) {
+                alert("Трябва да се съгласиш с условията и политиката за поверителност");
+                return;
+            }
+
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    phone: "+359 " + phone,
+                    city: city,
+                    birth_date: birthDate,
+                    gender: gender,
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            alert(data.message);
+
+            if (data.message === "Успешна регистрация") {
+                window.location.href = "/";
+            }
+        }
+
+        function goLogin() {
+            window.location.href = "/";
+        }
+    </script>
+
+</body>
+</html>
