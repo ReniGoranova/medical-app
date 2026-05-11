@@ -290,3 +290,56 @@ textarea {
 
     font-size: 18px;
 }
+
+@media (max-width: 768px) {
+    .container {
+        width: 92% !important;
+        max-width: 92% !important;
+        margin: 20px auto !important;
+        padding: 22px !important;
+        border-radius: 20px !important;
+    }
+
+    .card-body {
+        padding: 24px !important;
+    }
+
+    h1 {
+        font-size: 30px !important;
+        text-align: center;
+    }
+
+    h2, h3 {
+        font-size: 22px !important;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 16px !important;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .d-flex {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .profile-button {
+        width: 58px;
+        height: 58px;
+        top: 15px;
+        right: 15px;
+        border-radius: 18px;
+    }
+
+    .profile-button svg {
+        width: 28px;
+        height: 28px;
+    }
+}
