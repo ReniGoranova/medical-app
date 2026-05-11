@@ -8,12 +8,16 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
+import os
+
+
 def get_db():
     return mysql.connector.connect(
-        host="localhost",
-        user="medical_user",
-        password="medical123",
-        database="medical_app"
+        host=os.getenv("MYSQLHOST"),
+        user=os.getenv("MYSQLUSER"),
+        password=os.getenv("MYSQLPASSWORD"),
+        database=os.getenv("MYSQLDATABASE"),
+        port=int(os.getenv("MYSQLPORT"))
     )
 
 
