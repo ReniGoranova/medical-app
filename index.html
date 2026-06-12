@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medical App - Начало</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/static/style.css?v=900">
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-page-wrapper">
+
+            <div class="login-main-column">
+
+                <div class="login-logo-card">
+                    <img src="/static/logo.png" alt="Medical App" class="login-logo-img">
+                </div>
+
+                <div class="card shadow-lg border-0 rounded-4 login-card">
+
+                    <div class="card-body">
+
+                        <h3 class="login-title">
+                            Вход
+                        </h3>
+
+                        <div class="login-role-box mb-4">
+
+                            <span class="login-role-title">
+                                Влизам като:
+                            </span>
+
+                            <div class="login-role-options">
+
+                                <label class="login-role-option">
+                                    <input
+                                        type="radio"
+                                        name="loginRole"
+                                        value="patient"
+                                        checked
+                                        onchange="selectLoginRole()"
+                                    >
+                                    <span>Пациент</span>
+                                </label>
+
+                                <label class="login-role-option">
+                                    <input
+                                        type="radio"
+                                        name="loginRole"
+                                        value="doctor"
+                                        onchange="selectLoginRole()"
+                                    >
+                                    <span>Лекар</span>
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <input
+                            type="text"
+                            id="loginUsername"
+                            class="form-control mb-3"
+                            placeholder="Потребителско име"
+                        >
+
+                        <div class="input-group password-input-group mb-3">
+
+                            <input
+                                type="password"
+                                id="loginPassword"
+                                class="form-control"
+                                placeholder="Парола"
+                            >
+
+                            <button
+                                class="btn password-toggle-button"
+                                type="button"
+                                onclick="toggleLoginPassword()"
+                                aria-label="Покажи или скрий паролата"
+                            >
+                                <svg
+                                    id="eyeOpenIcon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="22"
+                                    height="22"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M1.5 12s4-7 10.5-7 10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+
+                                <svg
+                                    id="eyeClosedIcon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="22"
+                                    height="22"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    style="display: none;"
+                                >
+                                    <path d="M3 3l18 18"/>
+                                    <path d="M10.6 10.6A2 2 0 0 0 12 14a2 2 0 0 0 1.4-.6"/>
+                                    <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.5 0 10.5 7 10.5 7a18 18 0 0 1-3.1 3.8"/>
+                                    <path d="M6.4 6.6C3.3 8.7 1.5 12 1.5 12s4 7 10.5 7a10.8 10.8 0 0 0 4.1-.8"/>
+                                </svg>
+                            </button>
+
+                        </div>
+
+                        <button
+                            class="btn btn-primary w-100 mb-4"
+                            onclick="login()"
+                        >
+                            Вход
+                        </button>
+
+                        <hr>
+
+                        <p class="text-center mb-3">
+                            Нямате регистрация?
+                        </p>
+
+                        <button
+                            class="btn btn-outline-primary w-100 patient-register-button"
+                            onclick="openPatientRegister()"
+                        >
+                            Регистрация като пациент
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="doctor-info-login-card">
+
+                    <h4>
+                        Аз съм лекар
+                    </h4>
+
+                    <p>
+                        Разберете как Medical App може да Ви помогне да представите професионалния си профил,
+                        да управлявате графика си и да улесните пациентите при запазване на час.
+                    </p>
+
+                    <button onclick="openForDoctorsPage()">
+                        Научи повече →
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function openPatientRegister() {
+            window.location.href = "/register-page";
+        }
+
+        function openForDoctorsPage() {
+            window.location.href = "/for-doctors";
+        }
+
+        function getSelectedLoginRole() {
+            const selectedRole = document.querySelector('input[name="loginRole"]:checked');
+            return selectedRole ? selectedRole.value : "patient";
+        }
+
+        function selectLoginRole() {
+            const selectedRole = getSelectedLoginRole();
+            const usernameInput = document.getElementById("loginUsername");
+
+            if (selectedRole === "patient") {
+                usernameInput.placeholder = "Потребителско име";
+            } else {
+                usernameInput.placeholder = "Потребителско име на лекар";
+            }
+        }
+
+        function toggleLoginPassword() {
+            const passwordInput = document.getElementById("loginPassword");
+            const eyeOpenIcon = document.getElementById("eyeOpenIcon");
+            const eyeClosedIcon = document.getElementById("eyeClosedIcon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeOpenIcon.style.display = "none";
+                eyeClosedIcon.style.display = "block";
+            } else {
+                passwordInput.type = "password";
+                eyeOpenIcon.style.display = "block";
+                eyeClosedIcon.style.display = "none";
+            }
+        }
+
+        async function login() {
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const role = getSelectedLoginRole();
+
+            if (username === "" || password === "") {
+                alert("Попълни всички полета");
+                return;
+            }
+
+            if (role === "patient") {
+                await loginAsPatient(username, password);
+            } else {
+                await loginAsDoctor(username, password);
+            }
+        }
+
+        async function loginAsPatient(username, password) {
+            try {
+                const response = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.removeItem("doctor_username");
+                    localStorage.removeItem("doctor_id");
+                    localStorage.removeItem("doctor_name");
+
+                    localStorage.setItem("username", username);
+
+                    window.location.href = "/search";
+                } else {
+                    alert(data.message);
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("Възникна грешка при вход като пациент.");
+            }
+        }
+
+        async function loginAsDoctor(doctorUsername, doctorPassword) {
+            try {
+                const response = await fetch("/doctor-login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        doctor_username: doctorUsername,
+                        doctor_password: doctorPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("bookingData");
+
+                    localStorage.setItem("doctor_username", doctorUsername);
+                    localStorage.setItem("doctor_id", data.doctor_id);
+                    localStorage.setItem("doctor_name", data.doctor_name || "");
+
+                    window.location.href = "/doctor-dashboard";
+                } else {
+                    alert(data.message);
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("Възникна грешка при вход като лекар.");
+            }
+        }
+
+        selectLoginRole();
+    </script>
+
+</body>
+</html>

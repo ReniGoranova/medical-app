@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Лекарски панел - Medical App</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/static/style.css?v=904">
+
+    <style>
+        .dd-day-off-mini-btn {
+            margin-top: 6px;
+            padding: 4px 8px;
+            border: 0;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.92);
+            color: #0b3b75;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .dd-day-off-mini-btn:hover {
+            background: #ffffff;
+            transform: translateY(-1px);
+        }
+        @media (max-width: 768px) {
+            .dd-day-off-mini-btn {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dd-body">
+
+
+    <aside class="dd-sidebar">
+
+        <div class="dd-sidebar-logo" onclick="goHome()">
+            <img src="/static/logo.png" alt="Medical App">
+        </div>
+
+        <nav class="dd-sidebar-nav">
+
+            <button class="dd-nav-item active" data-page="profile" onclick="switchPage('profile')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M5.5 21a7 7 0 0 1 13 0"/>
+                </svg>
+                <span>Моят профил</span>
+            </button>
+
+            <button class="dd-nav-item" data-page="schedule" onclick="switchPage('schedule')">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                <span>График</span>
+            </button>
+
+        </nav>
+
+        <div class="dd-sidebar-footer">
+
+            <div class="dd-sidebar-user">
+                <div class="dd-sidebar-avatar" id="sidebarAvatar">Д</div>
+                <div class="dd-sidebar-user-info">
+                    <strong id="sidebarDoctorName">Лекар</strong>
+                    <span id="sidebarDoctorSpec">Специалност</span>
+                </div>
+            </div>
+
+            <button class="dd-logout-btn" onclick="logout()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Изход
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="dd-main">
+
+        <section class="dd-page active" data-page-content="profile">
+
+            <div class="dd-welcome">
+                <div>
+                    <span class="dd-welcome-tag">
+                        <span class="dd-welcome-dot"></span>
+                        Лекарски профил
+                    </span>
+                    <h1>Здравейте, <span id="welcomeName">д-р...</span> 👋</h1>
+                    <p>Управлявайте своя професионален профил и информация, видими за пациентите.</p>
+                </div>
+
+                <div class="dd-welcome-actions">
+                    <button class="dd-btn-secondary" id="cancelEditBtn" onclick="cancelEdit()" style="display: none;">
+                        Отказ
+                    </button>
+                    <button class="dd-btn-primary" id="editBtn" onclick="enableEdit()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/>
+                        </svg>
+                        Редактирай профил
+                    </button>
+                    <button class="dd-btn-primary" id="saveBtn" onclick="saveProfile()" style="display: none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Запази промените
+                    </button>
+                </div>
+            </div>
+
+            <div class="dd-stats-row">
+                <div class="dd-stat-card">
+                    <div class="dd-stat-icon dd-stat-icon-blue">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2"/>
+                            <path d="M16 2v4M8 2v4M3 10h18"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="dd-stat-number" id="statAppointments">0</span>
+                        <span class="dd-stat-label">Часове тази седмица</span>
+                    </div>
+                </div>
+
+                <div class="dd-stat-card">
+                    <div class="dd-stat-icon dd-stat-icon-orange">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="dd-stat-number" id="statRating">—</span>
+                        <span class="dd-stat-label">Средна оценка</span>
+                    </div>
+                </div>
+
+                <div class="dd-stat-card">
+                    <div class="dd-stat-icon dd-stat-icon-green">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="dd-stat-number" id="statReviews">0</span>
+                        <span class="dd-stat-label">Отзива от пациенти</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dd-card">
+                <div class="dd-card-head">
+                    <h2>Основни данни</h2>
+                    <p>Информацията, която пациентите виждат най-отгоре във Вашия профил.</p>
+                </div>
+
+                <div class="dd-fields-grid">
+
+                    <div class="dd-field">
+                        <label>Име</label>
+                        <div class="dd-field-value" id="v_name">—</div>
+                        <input type="text" id="i_name" class="dd-field-input" style="display: none;">
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Специалност</label>
+                        <div class="dd-field-value" id="v_specialty">—</div>
+                        <select id="i_specialty" class="dd-field-input" style="display: none;">
+                            <option>Кардиолог</option>
+                            <option>Дерматолог</option>
+                            <option>Ендокринолог</option>
+                            <option>Гастроентеролог</option>
+                            <option>Гинеколог</option>
+                            <option>Хирург</option>
+                            <option>Невролог</option>
+                            <option>Очен лекар (Офталмолог)</option>
+                            <option>Ортопед</option>
+                            <option>Ото-рино-ларинголог (УНГ)</option>
+                            <option>Педиатър</option>
+                            <option>Психиатър</option>
+                            <option>Пулмолог</option>
+                            <option>Ревматолог</option>
+                            <option>Уролог</option>
+                            <option>Общопрактикуващ лекар</option>
+                            <option>Друга</option>
+                        </select>
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Опит</label>
+                        <div class="dd-field-value" id="v_experience">—</div>
+                        <input type="text" id="i_experience" class="dd-field-input" style="display: none;">
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Телефон</label>
+                        <div class="dd-field-value" id="v_phone">—</div>
+                        <div class="dr-phone-wrap dd-edit-only" id="i_phone_wrap" style="display: none;">
+                            <span class="dr-phone-prefix">+359</span>
+                            <input
+                                type="tel"
+                                id="i_phone"
+                                placeholder="888123456"
+                                inputmode="numeric"
+                                maxlength="9"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Имейл</label>
+                        <div class="dd-field-value" id="v_email">—</div>
+                        <input type="email" id="i_email" class="dd-field-input" style="display: none;" placeholder="ivan.ivanov@example.com">
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Област</label>
+                        <div class="dd-field-value" id="v_city">—</div>
+                        <select id="i_city" class="dd-field-input" style="display: none;">
+                            <option value="">Избери област...</option>
+                            <option value="Благоевград">Благоевград</option>
+                            <option value="Бургас">Бургас</option>
+                            <option value="Варна">Варна</option>
+                            <option value="Велико Търново">Велико Търново</option>
+                            <option value="Видин">Видин</option>
+                            <option value="Враца">Враца</option>
+                            <option value="Габрово">Габрово</option>
+                            <option value="Добрич">Добрич</option>
+                            <option value="Кърджали">Кърджали</option>
+                            <option value="Кюстендил">Кюстендил</option>
+                            <option value="Ловеч">Ловеч</option>
+                            <option value="Монтана">Монтана</option>
+                            <option value="Пазарджик">Пазарджик</option>
+                            <option value="Перник">Перник</option>
+                            <option value="Плевен">Плевен</option>
+                            <option value="Пловдив">Пловдив</option>
+                            <option value="Разград">Разград</option>
+                            <option value="Русе">Русе</option>
+                            <option value="Силистра">Силистра</option>
+                            <option value="Сливен">Сливен</option>
+                            <option value="Смолян">Смолян</option>
+                            <option value="София">София</option>
+                            <option value="София-област">София-област</option>
+                            <option value="Стара Загора">Стара Загора</option>
+                            <option value="Търговище">Търговище</option>
+                            <option value="Хасково">Хасково</option>
+                            <option value="Шумен">Шумен</option>
+                            <option value="Ямбол">Ямбол</option>
+                        </select>
+                    </div>
+
+                    <div class="dd-field dd-field-wide">
+                        <label>Адрес</label>
+                        <div class="dd-field-value" id="v_address">—</div>
+                        <input type="text" id="i_address" class="dd-field-input" style="display: none;" placeholder="напр. ул. Иван Вазов 8, ет. 2, кабинет 5">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="dd-card">
+                <div class="dd-card-head">
+                    <h2>Професионална информация</h2>
+                    <p>Подробности за Вашата практика, образование и опит.</p>
+                </div>
+
+                <div class="dd-fields-stack">
+
+                    <div class="dd-field">
+                        <label>Кратко описание</label>
+                        <div class="dd-field-value dd-field-text" id="v_description">—</div>
+                        <textarea id="i_description" class="dd-field-input" rows="3" style="display: none;"></textarea>
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Образование</label>
+                        <div class="dd-field-value dd-field-text" id="v_education">—</div>
+                        <textarea id="i_education" class="dd-field-input" rows="3" style="display: none;"></textarea>
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Квалификации</label>
+                        <ul class="dd-qual-list-view" id="v_qualifications"></ul>
+
+                        <div class="dd-qual-edit" id="i_qualifications_wrap" style="display: none;">
+                            <div id="qualEditList"></div>
+                            <div class="dd-qual-add-row">
+                                <input type="text" id="qualAddInput" placeholder="Добави нова квалификация" onkeydown="if(event.key==='Enter'){event.preventDefault();addQual();}">
+                                <button type="button" onclick="addQual()">+ Добави</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dd-field">
+                        <label>Биография</label>
+                        <div class="dd-field-value dd-field-text" id="v_biography">—</div>
+                        <textarea id="i_biography" class="dd-field-input" rows="5" style="display: none;"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="dd-card">
+                <div class="dd-card-head">
+                    <h2>Отзиви от пациенти</h2>
+                    <p>Оценки и коментари, оставени от Вашите пациенти.</p>
+                </div>
+
+                <div id="reviewsContainer" class="dd-reviews-container">
+                    <div class="dd-reviews-empty">Все още няма отзиви.</div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="dd-page" data-page-content="schedule">
+
+            <div class="dd-welcome">
+                <div>
+                    <span class="dd-welcome-tag">
+                        <span class="dd-welcome-dot"></span>
+                        Седмичен график
+                    </span>
+                    <h1>Моят график</h1>
+                    <p>Виждайте заетите часове, премахвайте записи или заключвайте часове за телефонни резервации.</p>
+                </div>
+            </div>
+
+            <div class="dd-cancel-banner" id="cancelBanner" style="display: none;">
+                <div class="dd-cancel-banner-icon">⚠️</div>
+                <div class="dd-cancel-banner-content">
+                    <strong id="cancelBannerTitle">Имате отказани часове от пациенти</strong>
+                    <p id="cancelBannerText">Вижте подробности в графика — оранжеви клетки.</p>
+                </div>
+                <button class="dd-cancel-banner-btn" onclick="dismissAllPatientCancellations()">
+                    Разбрах
+                </button>
+            </div>
+
+            <div class="dd-legend">
+                <div class="dd-legend-item">
+                    <span class="dd-legend-box dd-legend-free"></span>
+                    Свободен (клик за заключване)
+                </div>
+                <div class="dd-legend-item">
+                    <span class="dd-legend-box dd-legend-busy"></span>
+                    Зает от пациент (клик за детайли)
+                </div>
+                <div class="dd-legend-item">
+                    <span class="dd-legend-box dd-legend-blocked"></span>
+                    Заключен от Вас (телефонна резервация)
+                </div>
+                <div class="dd-legend-item">
+                    <span class="dd-legend-box dd-legend-cancelled"></span>
+                    Отказан от пациент (клик за детайли)
+                </div>
+                <div class="dd-legend-item">
+                    <span class="dd-legend-box dd-legend-past"></span>
+                    Минал час (неактивен)
+                </div>
+            </div>
+
+            <div class="dd-week-nav">
+                <button class="dd-week-btn" onclick="changeWeek(-1)">
+                    ← Предишна
+                </button>
+                <div class="dd-week-label" id="weekLabel">—</div>
+                <button class="dd-week-btn" onclick="changeWeek(1)">
+                    Следваща →
+                </button>
+                <button class="dd-week-btn dd-week-today" onclick="goToToday()">
+                    Тази седмица
+                </button>
+            </div>
+
+            <div class="dd-calendar-wrap">
+                <div class="dd-calendar" id="calendarGrid">
+
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <div class="dd-modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="dd-modal" onclick="event.stopPropagation()">
+
+            <button class="dd-modal-close" onclick="closeModal()">×</button>
+
+            <div id="modalContent">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        
+        const doctorId = localStorage.getItem("doctor_id");
+        const doctorUsername = localStorage.getItem("doctor_username");
+
+        if (!doctorId || !doctorUsername) {
+            window.location.href = "/";
+        }
+
+        let doctorData = null;
+        let qualEditArray = [];
+        let currentWeekStart = null;
+        let scheduleData = [];
+        let patientCancellations = [];
+        let doctorDayOffs = [];
+
+        
+        function switchPage(page) {
+            document.querySelectorAll(".dd-nav-item").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.page === page);
+            });
+
+            document.querySelectorAll(".dd-page").forEach(p => {
+                p.classList.toggle("active", p.dataset.pageContent === page);
+            });
+
+            if (page === "schedule") {
+                renderCalendar();
+            }
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function goHome() {
+            switchPage("profile");
+        }
+
+        function logout() {
+            if (!confirm("Сигурни ли сте, че искате да излезете?")) return;
+            localStorage.removeItem("doctor_id");
+            localStorage.removeItem("doctor_username");
+            localStorage.removeItem("doctor_name");
+            window.location.href = "/";
+        }
+
+        
+        async function loadDoctor() {
+            try {
+                const response = await fetch(`/doctor-data/${doctorId}`);
+                doctorData = await response.json();
+
+                if (!doctorData || !doctorData.id) {
+                    alert("Не успяхме да заредим Вашия профил.");
+                    return;
+                }
+
+                renderProfile();
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при зареждане на профила.");
+            }
+        }
+
+        function stripPhonePrefix(phone) {
+            if (!phone) return "";
+            return String(phone).replace("+359", "").replace(/\D/g, "").slice(-9);
+        }
+
+        function renderProfile() {
+            const d = doctorData;
+
+            document.getElementById("welcomeName").innerText = d.name || "лекар";
+            document.getElementById("sidebarDoctorName").innerText = d.name || "Лекар";
+            document.getElementById("sidebarDoctorSpec").innerText = d.specialty || "—";
+
+            const firstChar = (d.name || "Д").trim().replace(/^Д-р\s*/i, "").charAt(0).toUpperCase();
+            document.getElementById("sidebarAvatar").innerText = firstChar;
+
+            document.getElementById("v_name").innerText = d.name || "—";
+            document.getElementById("v_specialty").innerText = d.specialty || "—";
+            document.getElementById("v_experience").innerText = d.experience || "—";
+            document.getElementById("v_phone").innerText = d.phone || "—";
+            document.getElementById("v_email").innerText = d.email || "—";
+            document.getElementById("v_city").innerText = d.city || "—";
+            document.getElementById("v_address").innerText = d.address || "—";
+            document.getElementById("v_description").innerText = d.description || "—";
+            document.getElementById("v_education").innerText = d.education || "—";
+            document.getElementById("v_biography").innerText = d.biography || "—";
+
+            const qualList = document.getElementById("v_qualifications");
+            qualList.innerHTML = "";
+            if (d.qualifications) {
+                d.qualifications.split(";").forEach(q => {
+                    const t = q.trim();
+                    if (t) {
+                        const li = document.createElement("li");
+                        li.innerText = t;
+                        qualList.appendChild(li);
+                    }
+                });
+            }
+            if (qualList.children.length === 0) {
+                qualList.innerHTML = '<li class="dd-empty">Няма добавени квалификации</li>';
+            }
+
+            document.getElementById("i_name").value = d.name || "";
+            document.getElementById("i_specialty").value = d.specialty || "";
+            document.getElementById("i_experience").value = d.experience || "";
+            document.getElementById("i_phone").value = stripPhonePrefix(d.phone);
+            document.getElementById("i_email").value = d.email || "";
+            document.getElementById("i_city").value = d.city || "";
+            document.getElementById("i_address").value = d.address || "";
+            document.getElementById("i_description").value = d.description || "";
+            document.getElementById("i_education").value = d.education || "";
+            document.getElementById("i_biography").value = d.biography || "";
+        }
+
+        function enableEdit() {
+            document.querySelectorAll('.dd-page[data-page-content="profile"] .dd-card').forEach(card => {
+                card.classList.add("editing");
+            });
+
+            document.getElementById("v_qualifications").style.display = "none";
+            document.getElementById("i_qualifications_wrap").style.display = "block";
+
+            qualEditArray = doctorData.qualifications
+                ? doctorData.qualifications.split(";").map(q => q.trim()).filter(q => q)
+                : [];
+            renderQualEdit();
+
+            document.getElementById("editBtn").style.display = "none";
+            document.getElementById("saveBtn").style.display = "inline-flex";
+            document.getElementById("cancelEditBtn").style.display = "inline-flex";
+        }
+
+        function cancelEdit() {
+            document.querySelectorAll('.dd-page[data-page-content="profile"] .dd-card').forEach(card => {
+                card.classList.remove("editing");
+            });
+
+            document.getElementById("v_qualifications").style.display = "";
+            document.getElementById("i_qualifications_wrap").style.display = "none";
+
+            document.getElementById("editBtn").style.display = "inline-flex";
+            document.getElementById("saveBtn").style.display = "none";
+            document.getElementById("cancelEditBtn").style.display = "none";
+
+            renderProfile();
+        }
+
+        function addQual() {
+            const input = document.getElementById("qualAddInput");
+            const val = input.value.trim();
+            if (val === "") return;
+            qualEditArray.push(val);
+            input.value = "";
+            renderQualEdit();
+        }
+
+        function removeQual(i) {
+            qualEditArray.splice(i, 1);
+            renderQualEdit();
+        }
+
+        function renderQualEdit() {
+            const list = document.getElementById("qualEditList");
+            list.innerHTML = "";
+
+            if (qualEditArray.length === 0) {
+                list.innerHTML = '<div class="dd-qual-empty-edit">Все още няма квалификации.</div>';
+                return;
+            }
+
+            qualEditArray.forEach((q, i) => {
+                const item = document.createElement("div");
+                item.className = "dd-qual-item-edit";
+                item.innerHTML = `
+                    <span>✓ ${q}</span>
+                    <button type="button" onclick="removeQual(${i})">×</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function formatAddressWithQuotes(address) {
+            if (!address || typeof address !== "string") return address;
+            let result = address.trim();
+            if (result.includes('"') || result.includes('"') || result.includes('"')) {
+                return result;
+            }
+            const pattern = /^(ул\.|бул\.|пл\.|ж\.к\.|кв\.)\s+([^\d,]+?)\s+(\d.*)$/i;
+            const match = result.match(pattern);
+            if (match) {
+                const prefix = match[1];
+                const streetName = match[2].trim();
+                const numberPart = match[3].trim();
+                result = `${prefix} "${streetName}" ${numberPart}`;
+            }
+            return result;
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById("i_name").value.trim();
+            const specialty = document.getElementById("i_specialty").value;
+            const city = document.getElementById("i_city").value;
+            const phoneDigits = document.getElementById("i_phone").value.trim();
+            const email = document.getElementById("i_email").value.trim();
+            const rawAddress = document.getElementById("i_address").value.trim();
+
+            if (!name || !specialty || !city) {
+                alert("Името, специалността и областта са задължителни.");
+                return;
+            }
+
+            const cyrillicRegex = /^[а-яА-ЯёЁ\s\-\.]+$/;
+            if (!cyrillicRegex.test(name)) {
+                alert("Името трябва да бъде написано само на кирилица.");
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email && !emailRegex.test(email)) {
+                alert("Моля, въведете валиден имейл адрес.");
+                return;
+            }
+
+            const phoneRegex = /^[0-9]{9}$/;
+            if (!phoneRegex.test(phoneDigits)) {
+                alert("Телефонният номер трябва да съдържа точно 9 цифри (без +359).");
+                return;
+            }
+
+            const fullPhone = "+359 " + phoneDigits;
+            const formattedAddress = formatAddressWithQuotes(rawAddress);
+
+            const payload = {
+                doctor_id: Number(doctorId),
+                name: name,
+                specialty: specialty,
+                city: city,
+                address: formattedAddress,
+                phone: fullPhone,
+                email: email,
+                experience: document.getElementById("i_experience").value.trim(),
+                description: document.getElementById("i_description").value.trim(),
+                education: document.getElementById("i_education").value.trim(),
+                qualifications: qualEditArray.join("; "),
+                biography: document.getElementById("i_biography").value.trim()
+            };
+
+            const saveBtn = document.getElementById("saveBtn");
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Запазване...";
+
+            try {
+                const response = await fetch("/doctor-update", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Object.assign(doctorData, payload);
+                    localStorage.setItem("doctor_name", payload.name);
+
+                    document.querySelectorAll('.dd-page[data-page-content="profile"] .dd-card').forEach(card => {
+                        card.classList.remove("editing");
+                    });
+
+                    document.getElementById("v_qualifications").style.display = "";
+                    document.getElementById("i_qualifications_wrap").style.display = "none";
+
+                    document.getElementById("editBtn").style.display = "inline-flex";
+                    document.getElementById("saveBtn").style.display = "none";
+                    document.getElementById("cancelEditBtn").style.display = "none";
+
+                    renderProfile();
+                    alert("Профилът е обновен успешно!");
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Запази промените
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.getElementById("i_phone");
+            const nameInput = document.getElementById("i_name");
+
+            if (phoneInput) {
+                phoneInput.addEventListener("input", function () {
+                    this.value = this.value.replace(/\D/g, "").slice(0, 9);
+                });
+                phoneInput.addEventListener("paste", function (e) {
+                    e.preventDefault();
+                    const pasted = (e.clipboardData || window.clipboardData).getData("text");
+                    this.value = pasted.replace(/\D/g, "").slice(0, 9);
+                });
+            }
+
+            if (nameInput) {
+                nameInput.addEventListener("input", function () {
+                    this.value = this.value.replace(/[^а-яА-ЯёЁ\s\-\.]/g, "");
+                });
+            }
+        });
+
+        async function loadReviews() {
+            try {
+                const response = await fetch(`/reviews/${doctorId}`);
+                const reviews = await response.json();
+
+                const container = document.getElementById("reviewsContainer");
+                document.getElementById("statReviews").innerText = reviews.length;
+
+                if (reviews.length === 0) {
+                    container.innerHTML = '<div class="dd-reviews-empty">Все още няма отзиви.</div>';
+                    document.getElementById("statRating").innerText = "—";
+                    return;
+                }
+
+                let total = 0;
+                container.innerHTML = "";
+                reviews.forEach(r => {
+                    total += Number(r.rating);
+                    const card = document.createElement("div");
+                    card.className = "dd-review-card";
+                    const stars = "⭐".repeat(Number(r.rating));
+                    const comment = r.comment && r.comment.trim() ? r.comment.trim() : "<em>Без коментар</em>";
+                    card.innerHTML = `
+                        <div class="dd-review-head">
+                            <strong>${r.username}</strong>
+                            <span class="dd-review-stars">${stars}</span>
+                        </div>
+                        <p class="dd-review-comment">${comment}</p>
+                    `;
+                    container.appendChild(card);
+                });
+
+                const avg = (total / reviews.length).toFixed(1);
+                document.getElementById("statRating").innerText = avg + " / 5";
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        const TIMES = [
+            "09:00", "09:30", "10:00", "10:30",
+            "11:00", "11:30", "12:00", "12:30",
+            "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30",
+            "17:00", "17:30", "18:00"
+        ];
+
+        const DAYS = ["Пон", "Вт", "Ср", "Чет", "Пет", "Съб", "Нед"];
+
+        function getMonday(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${y}-${m}-${day}`;
+        }
+
+        function formatDateBG(date) {
+            return date.getDate() + "." + String(date.getMonth() + 1).padStart(2, "0");
+        }
+
+        const EXTRA_NON_WORKING_DAYS = new Set([
+            "2026-01-02"
+        ]);
+
+        function addDays(date, days) {
+            const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        function getOrthodoxEasterDate(year) {
+            const a = year % 4;
+            const b = year % 7;
+            const c = year % 19;
+            const d = (19 * c + 15) % 30;
+            const e = (2 * a + 4 * b - d + 34) % 7;
+            const month = Math.floor((d + e + 114) / 31);
+            const day = ((d + e + 114) % 31) + 1;
+
+            return addDays(new Date(year, month - 1, day), 13);
+        }
+
+        function nextWorkingDayAfter(date, usedDays) {
+            let nextDay = addDays(date, 1);
+
+            while (nextDay.getDay() === 0 || nextDay.getDay() === 6 || usedDays.has(formatDate(nextDay))) {
+                nextDay = addDays(nextDay, 1);
+            }
+
+            return nextDay;
+        }
+
+        function getBulgarianNonWorkingDays(year) {
+            const fixedHolidays = [
+                new Date(year, 0, 1),
+                new Date(year, 2, 3),
+                new Date(year, 4, 1),
+                new Date(year, 4, 6),
+                new Date(year, 4, 24),
+                new Date(year, 8, 6),
+                new Date(year, 8, 22),
+                new Date(year, 11, 24),
+                new Date(year, 11, 25),
+                new Date(year, 11, 26)
+            ];
+
+            const easter = getOrthodoxEasterDate(year);
+            const easterHolidays = [
+                addDays(easter, -2),
+                addDays(easter, -1),
+                easter,
+                addDays(easter, 1)
+            ];
+
+            const nonWorkingDays = new Set([
+                ...fixedHolidays.map(formatDate),
+                ...easterHolidays.map(formatDate),
+                ...EXTRA_NON_WORKING_DAYS
+            ]);
+
+            fixedHolidays.forEach(holiday => {
+                if (holiday.getDay() === 0 || holiday.getDay() === 6) {
+                    nonWorkingDays.add(formatDate(nextWorkingDayAfter(holiday, nonWorkingDays)));
+                }
+            });
+
+            return nonWorkingDays;
+        }
+
+        function isNonWorkingDateObject(date) {
+            const day = date.getDay();
+
+            if (day === 0 || day === 6) {
+                return true;
+            }
+
+            const holidays = getBulgarianNonWorkingDays(date.getFullYear());
+            return holidays.has(formatDate(date));
+        }
+
+        function isNonWorkingDateString(dateString) {
+            if (!dateString) {
+                return false;
+            }
+
+            const [year, month, day] = dateString.split("-").map(Number);
+            return isNonWorkingDateObject(new Date(year, month - 1, day));
+        }
+
+        function getNonWorkingLabel(dateString) {
+            const [year, month, day] = dateString.split("-").map(Number);
+            const selectedDate = new Date(year, month - 1, day);
+
+            if (selectedDate.getDay() === 0 || selectedDate.getDay() === 6) {
+                return "Почивен ден";
+            }
+
+            return "Официален празник";
+        }
+
+        function changeWeek(delta) {
+            const d = new Date(currentWeekStart);
+            d.setDate(d.getDate() + (delta * 7));
+            currentWeekStart = d;
+            renderCalendar();
+        }
+
+        function goToToday() {
+            currentWeekStart = getMonday(new Date());
+            renderCalendar();
+        }
+
+        async function renderCalendar() {
+            if (!currentWeekStart) {
+                currentWeekStart = getMonday(new Date());
+            }
+
+            const weekStartStr = formatDate(currentWeekStart);
+            const weekEnd = new Date(currentWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+
+            document.getElementById("weekLabel").innerText =
+                formatDateBG(currentWeekStart) + " — " + formatDateBG(weekEnd) + "." + weekEnd.getFullYear();
+
+            try {
+                const response = await fetch(`/doctor-schedule/${doctorId}?week_start=${weekStartStr}`);
+                scheduleData = await response.json();
+                if (!Array.isArray(scheduleData)) scheduleData = [];
+            } catch (err) {
+                console.error(err);
+                scheduleData = [];
+            }
+
+            try {
+                const response = await fetch(`/doctor-day-offs/${doctorId}?week_start=${weekStartStr}`);
+                doctorDayOffs = await response.json();
+                if (!Array.isArray(doctorDayOffs)) doctorDayOffs = [];
+            } catch (err) {
+                console.error(err);
+                doctorDayOffs = [];
+            }
+
+            try {
+                const response = await fetch(`/doctor-patient-cancellations/${doctorId}`);
+                patientCancellations = await response.json();
+                if (!Array.isArray(patientCancellations)) patientCancellations = [];
+            } catch (err) {
+                console.error(err);
+                patientCancellations = [];
+            }
+
+            const banner = document.getElementById("cancelBanner");
+            if (patientCancellations.length > 0) {
+                banner.style.display = "flex";
+                const count = patientCancellations.length;
+                document.getElementById("cancelBannerTitle").innerText =
+                    count === 1
+                        ? "Имате 1 отказан час от пациент"
+                        : `Имате ${count} отказани часа от пациенти`;
+            } else {
+                banner.style.display = "none";
+            }
+
+            document.getElementById("statAppointments").innerText =
+                scheduleData.filter(s => !s.is_blocked).length;
+
+            buildCalendarGrid();
+        }
+
+        function findPatientCancellation(dateStr, time) {
+            return patientCancellations.find(c => {
+                const t = c.appointment_time.replace(" ", "T");
+                return t.startsWith(dateStr) && t.includes(time);
+            });
+        }
+
+        function findDayOff(dateStr) {
+            return doctorDayOffs.find(d => String(d.off_date).startsWith(dateStr));
+        }
+
+        function findSlot(dateStr, time) {
+            return scheduleData.find(s => {
+                const slotTime = s.time.replace(" ", "T");
+                return slotTime.startsWith(dateStr) && slotTime.includes(time);
+            });
+        }
+
+        function isInPast(dateStr, time) {
+            const [year, month, day] = dateStr.split("-").map(Number);
+            const [hours, minutes] = time.split(":").map(Number);
+
+            const slotDate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+            const now = new Date();
+
+            return slotDate < now;
+        }
+
+        function buildCalendarGrid() {
+            const grid = document.getElementById("calendarGrid");
+            grid.innerHTML = "";
+
+            const corner = document.createElement("div");
+            corner.className = "dd-cal-corner";
+            corner.innerText = "Час";
+            grid.appendChild(corner);
+
+            const today = formatDate(new Date());
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(currentWeekStart);
+                d.setDate(d.getDate() + i);
+                const dateStr = formatDate(d);
+                const isToday = dateStr === today;
+                const isNonWorking = isNonWorkingDateObject(d);
+                const dayOff = findDayOff(dateStr);
+                const todayDateOnly = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+                const currentDateOnly = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+                const pastDay = currentDateOnly < todayDateOnly;
+                const canMarkDayOff = currentDateOnly > todayDateOnly;
+
+                const head = document.createElement("div");
+                head.className = "dd-cal-day-head" + (isToday ? " dd-cal-today" : "") + ((isNonWorking || dayOff) ? " dd-cal-non-working-head" : "");
+                head.innerHTML = `
+                    <span class="dd-cal-day-name">${DAYS[i]}</span>
+                    <span class="dd-cal-day-date">${formatDateBG(d)}</span>
+                    ${(!isNonWorking && canMarkDayOff && !dayOff) ? `<button type="button" class="dd-day-off-mini-btn" onclick="openDayOffModal('${dateStr}')">Маркирай като неработен</button>` : ""}
+                    ${dayOff ? `<button type="button" class="dd-day-off-mini-btn" onclick="openViewDayOffModal('${dateStr}')">Неработен ден</button>` : ""}
+                `;
+                grid.appendChild(head);
+            }
+
+            TIMES.forEach(time => {
+                const timeCell = document.createElement("div");
+                timeCell.className = "dd-cal-time";
+                timeCell.innerText = time;
+                grid.appendChild(timeCell);
+
+                for (let i = 0; i < 7; i++) {
+                    const d = new Date(currentWeekStart);
+                    d.setDate(d.getDate() + i);
+                    const dateStr = formatDate(d);
+
+                    const slot = findSlot(dateStr, time);
+                    const cancellation = findPatientCancellation(dateStr, time);
+                    const cell = document.createElement("div");
+                    const past = isInPast(dateStr, time);
+                    const nonWorking = isNonWorkingDateObject(d);
+                    const dayOff = findDayOff(dateStr);
+
+                    if (dayOff) {
+                        cell.className = "dd-cal-cell dd-cal-non-working";
+                        cell.innerHTML = `<span class="dd-cal-cell-text">Неработен ден</span>`;
+                        cell.onclick = () => openViewDayOffModal(dateStr);
+                    } else if (nonWorking) {
+                        cell.className = "dd-cal-cell dd-cal-non-working";
+                        cell.innerHTML = `<span class="dd-cal-cell-text">${getNonWorkingLabel(dateStr)}</span>`;
+                    } else if (past) {
+                        cell.className = "dd-cal-cell dd-cal-past";
+
+                        if (!slot && !cancellation) {
+                            cell.innerHTML = '<span class="dd-cal-cell-text">—</span>';
+                        } else if (cancellation) {
+                            cell.innerHTML = '<span class="dd-cal-cell-text">⚠️ Отказан</span>';
+                        } else if (slot.is_blocked) {
+                            cell.innerHTML = '<span class="dd-cal-cell-text">🔒</span>';
+                        } else {
+                            cell.innerHTML = `<span class="dd-cal-cell-text">👤 ${slot.patient_name || "Пациент"}</span>`;
+                        }
+                    } else if (cancellation && !slot) {
+                        cell.className = "dd-cal-cell dd-cal-cancelled";
+                        cell.innerHTML = `<span class="dd-cal-cell-text">⚠️ ${cancellation.patient_name || "Пациент"}</span>`;
+                        cell.onclick = () => openCancellationModal(cancellation);
+                    } else if (!slot) {
+                        cell.className = "dd-cal-cell dd-cal-free";
+                        cell.innerHTML = '<span class="dd-cal-cell-text">Свободен</span>';
+                        cell.onclick = () => openBlockModal(dateStr, time);
+                    } else if (slot.is_blocked) {
+                        cell.className = "dd-cal-cell dd-cal-blocked";
+                        cell.innerHTML = `<span class="dd-cal-cell-text">🔒 ${escapeHtml(slot.patient_name) || 'Заключен'}</span>`;
+                        cell.onclick = () => openBlockedModal(slot);
+                    } else {
+                        cell.className = "dd-cal-cell dd-cal-busy";
+                        cell.innerHTML = `
+                            <span class="dd-cal-cell-text">👤 ${slot.patient_name || "Пациент"}</span>
+                        `;
+                        cell.onclick = () => openAppointmentModal(slot);
+                    }
+
+                    grid.appendChild(cell);
+                }
+            });
+        }
+
+        function openModal(html) {
+            const overlay = document.getElementById("modalOverlay");
+            const modalContent = document.getElementById("modalContent");
+
+            modalContent.innerHTML = html;
+            overlay.classList.add("active");
+            document.body.classList.add("dd-modal-open");
+
+            const modalBox = overlay.querySelector(".dd-modal");
+            if (modalBox) {
+                modalBox.scrollTop = 0;
+            }
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+
+            document.getElementById("modalOverlay").classList.remove("active");
+            document.body.classList.remove("dd-modal-open");
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+
+        function escapeHtml(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function normalizePhoneInput(value) {
+            return String(value || "").replace(/\D/g, "").slice(0, 9);
+        }
+
+        function openAppointmentModal(slot) {
+            const timeStr = slot.time.replace("T", " ");
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-busy">👤</div>
+                <h3>Запазен час</h3>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Пациент:</span>
+                        <strong>${escapeHtml(slot.patient_name) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Телефон:</span>
+                        <strong>${escapeHtml(slot.patient_phone) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Дата и час:</span>
+                        <strong>${escapeHtml(timeStr)}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Причина за посещение:</span>
+                        <strong>${escapeHtml(slot.reason) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Метод на плащане:</span>
+                        <strong>${escapeHtml(slot.payment_method) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Бележка:</span>
+                        <strong>${escapeHtml(slot.appointment_note) || "—"}</strong>
+                    </div>
+                </div>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Затвори</button>
+                    <button class="dd-btn-danger" onclick="openCancelModal(${slot.id}, '${escapeHtml(timeStr)}', '${escapeHtml(slot.patient_name)}')">Откажи час</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        function openCancelModal(appointmentId, timeStr, patientName) {
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-busy">⚠️</div>
+                <h3>Отказване на час</h3>
+
+                <p class="dd-modal-note">
+                    Изберете причина за отказ. Пациентът <strong>${patientName || "—"}</strong>
+                    ще получи известие в профила си с тази причина.
+                </p>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Дата и час:</span>
+                        <strong>${timeStr}</strong>
+                    </div>
+                </div>
+
+                <label class="dd-modal-label">Причина:</label>
+
+                <div class="dd-cancel-reasons">
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelReason" value="Спешен случай при лекаря" checked onchange="toggleCustomReason()">
+                        <span>🚨 Спешен случай</span>
+                    </label>
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelReason" value="Болничен / лична причина" onchange="toggleCustomReason()">
+                        <span>🤒 Болничен / лична причина</span>
+                    </label>
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelReason" value="Промяна в графика на лекаря" onchange="toggleCustomReason()">
+                        <span>📅 Промяна в графика</span>
+                    </label>
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelReason" value="__custom__" onchange="toggleCustomReason()">
+                        <span>✍️ Друга причина</span>
+                    </label>
+                </div>
+
+                <input type="text" id="customCancelReason" class="dd-modal-input" placeholder="Опишете причината..." style="display: none; margin-top: 12px;">
+
+                <label class="dd-modal-label" style="margin-top: 14px;">Какво да стане с часа?</label>
+                <div class="dd-cancel-reasons">
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelAction" value="release" checked>
+                        <span>✅ Откажи и освободи часа за друг пациент</span>
+                    </label>
+                    <label class="dd-cancel-reason">
+                        <input type="radio" name="cancelAction" value="lock">
+                        <span>🔒 Откажи и запази часа като зает</span>
+                    </label>
+                </div>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Отказ</button>
+                    <button class="dd-btn-danger" onclick="confirmCancelAppointment(${appointmentId})">Потвърди отказа</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        function toggleCustomReason() {
+            const selected = document.querySelector('input[name="cancelReason"]:checked');
+            const customInput = document.getElementById("customCancelReason");
+            if (selected && selected.value === "__custom__") {
+                customInput.style.display = "block";
+                customInput.focus();
+            } else {
+                customInput.style.display = "none";
+            }
+        }
+
+        async function confirmCancelAppointment(appointmentId) {
+            const selected = document.querySelector('input[name="cancelReason"]:checked');
+            if (!selected) {
+                alert("Моля, изберете причина.");
+                return;
+            }
+
+            let reason = selected.value;
+            if (reason === "__custom__") {
+                const custom = document.getElementById("customCancelReason").value.trim();
+                if (!custom) {
+                    alert("Моля, въведете причина.");
+                    return;
+                }
+                reason = custom;
+            }
+
+            const selectedAction = document.querySelector('input[name="cancelAction"]:checked');
+            const lockTime = selectedAction && selectedAction.value === "lock";
+
+            try {
+                const response = await fetch("/doctor-cancel-appointment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        appointment_id: appointmentId,
+                        reason: reason,
+                        lock_time: lockTime
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    renderCalendar();
+                    alert(data.message || "Часът е отказан и пациентът ще бъде уведомен.");
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            }
+        }
+
+
+        function openDayOffModal(dateStr) {
+            const today = formatDate(new Date());
+            if (dateStr <= today) {
+                alert("Неработен ден може да бъде маркиран най-късно до предходния ден. Не можете да маркирате текущия ден като неработен.");
+                return;
+            }
+
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-blocked">📅</div>
+                <h3>Маркиране на неработен ден</h3>
+                <p class="dd-modal-note">
+                    Използвайте тази опция, когато няма да приемате пациенти през целия ден.
+                    Всички вече записани часове за тази дата ще бъдат отменени, а пациентите ще получат известие.
+                    Неработен ден може да бъде маркиран най-късно до предходния ден.
+                </p>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Дата:</span>
+                        <strong>${dateStr}</strong>
+                    </div>
+                </div>
+
+                <label class="dd-modal-label">Причина:</label>
+                <select id="dayOffReason" class="dd-modal-input">
+                    <option value="Болничен">Болничен</option>
+                    <option value="Спешен случай при лекаря">Спешен случай при лекаря</option>
+                    <option value="Промяна в графика на лекаря">Промяна в графика на лекаря</option>
+                    <option value="Планирано отсъствие">Планирано отсъствие</option>
+                    <option value="Личен ангажимент">Личен ангажимент</option>
+                    <option value="Друга причина">Друга причина</option>
+                </select>
+
+                <label class="dd-modal-label">Бележка:</label>
+                <textarea id="dayOffNote" class="dd-modal-input dd-modal-textarea" rows="4" placeholder="Допълнителна информация по желание"></textarea>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Отказ</button>
+                    <button class="dd-btn-danger" onclick="confirmDayOff('${dateStr}')">Потвърди неработен ден</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        function openViewDayOffModal(dateStr) {
+            const dayOff = findDayOff(dateStr);
+            if (!dayOff) return;
+
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-blocked">📅</div>
+                <h3>Неработен ден</h3>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Дата:</span>
+                        <strong>${escapeHtml(dateStr)}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Причина:</span>
+                        <strong>${escapeHtml(dayOff.reason) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Бележка:</span>
+                        <strong>${escapeHtml(dayOff.note) || "—"}</strong>
+                    </div>
+                </div>
+
+                <p class="dd-modal-note">На тази дата часовете не се показват като свободни за пациентите.</p>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Затвори</button>
+                    <button class="dd-btn-primary" onclick="removeDayOff(${dayOff.id})">Премахни неработния ден</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        async function confirmDayOff(dateStr) {
+            const today = formatDate(new Date());
+            if (dateStr <= today) {
+                alert("Неработен ден може да бъде маркиран най-късно до предходния ден. Не можете да маркирате текущия ден като неработен.");
+                return;
+            }
+
+            const reason = document.getElementById("dayOffReason").value;
+            const note = document.getElementById("dayOffNote").value.trim();
+
+            if (!confirm("Сигурни ли сте? Всички записани пациентски часове за тази дата ще бъдат отменени.")) {
+                return;
+            }
+
+            try {
+                const response = await fetch("/doctor-mark-day-off", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        doctor_id: Number(doctorId),
+                        off_date: dateStr,
+                        reason: reason,
+                        note: note
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    renderCalendar();
+                    const count = Number(data.cancelled_count || 0);
+                    alert(count > 0
+                        ? `Денят е маркиран като неработен. Отменени пациентски часове: ${count}.`
+                        : "Денят е маркиран като неработен.");
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            }
+        }
+
+        async function removeDayOff(dayOffId) {
+            if (!confirm("Сигурни ли сте, че искате отново да позволите резервации за този ден?")) return;
+
+            try {
+                const response = await fetch(`/doctor-day-off/${dayOffId}`, {
+                    method: "DELETE"
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    renderCalendar();
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            }
+        }
+
+        function openBlockedModal(slot) {
+            const timeStr = slot.time.replace("T", " ");
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-blocked">🔒</div>
+                <h3>Заключен час</h3>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Дата и час:</span>
+                        <strong>${escapeHtml(timeStr)}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Пациент:</span>
+                        <strong>${escapeHtml(slot.patient_name) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Телефон:</span>
+                        <strong>${escapeHtml(slot.patient_phone) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Метод на плащане:</span>
+                        <strong>${escapeHtml(slot.payment_method) || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Причина:</span>
+                        <strong>${escapeHtml(slot.reason) || "Резервиран по телефон"}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Бележка:</span>
+                        <strong>${escapeHtml(slot.appointment_note) || "—"}</strong>
+                    </div>
+                </div>
+
+                <p class="dd-modal-note">Този час е заключен и не може да бъде резервиран от пациент.</p>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Затвори</button>
+                    <button class="dd-btn-primary" onclick="deleteAppointment(${slot.id})">Отключи</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        function openBlockModal(dateStr, time) {
+            if (isNonWorkingDateString(dateStr)) {
+                alert("Тази дата е почивен ден и не може да се заключва или резервира.");
+                return;
+            }
+
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-free">🔒</div>
+                <h3>Заключи час</h3>
+                <p class="dd-modal-note">
+                    Използвайте това, когато пациент се обади по телефона и искате да запазите часа за него.
+                </p>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Дата:</span>
+                        <strong>${dateStr}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Час:</span>
+                        <strong>${time}</strong>
+                    </div>
+                </div>
+
+                <label class="dd-modal-label">Причина:</label>
+                <input type="text" id="blockReason" class="dd-modal-input" value="Резервиран по телефон">
+
+                <label class="dd-modal-label">Име и фамилия на пациент:</label>
+                <input type="text" id="blockPatientName" class="dd-modal-input" placeholder="напр. Иван Петров">
+
+                <label class="dd-modal-label">Телефон:</label>
+                <div class="dd-modal-phone-row">
+                    <span class="dd-modal-phone-prefix">+359</span>
+                    <input type="tel" id="blockPatientPhone" class="dd-modal-input dd-modal-phone-input" placeholder="888123456" inputmode="numeric" maxlength="9">
+                </div>
+
+                <label class="dd-modal-label">Метод на плащане:</label>
+                <select id="blockPaymentMethod" class="dd-modal-input">
+                    <option value="">Избери...</option>
+                    <option value="Платен преглед">Платен преглед</option>
+                    <option value="Преглед по НЗОК">Преглед по НЗОК</option>
+                </select>
+
+                <label class="dd-modal-label">Бележка:</label>
+                <textarea id="blockNote" class="dd-modal-input dd-modal-textarea" rows="4" placeholder="напр. пациентът ще носи направление, предпочита платен преглед и др."></textarea>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Отказ</button>
+                    <button class="dd-btn-primary" onclick="confirmBlock('${dateStr}', '${time}')">Заключи</button>
+                </div>
+            `;
+            openModal(html);
+
+            const phoneInput = document.getElementById("blockPatientPhone");
+            phoneInput.addEventListener("input", function () {
+                this.value = normalizePhoneInput(this.value);
+            });
+        }
+
+        async function confirmBlock(dateStr, time) {
+            if (isNonWorkingDateString(dateStr)) {
+                alert("Тази дата е почивен ден и не може да се заключва или резервира.");
+                closeModal();
+                return;
+            }
+
+            const reason = document.getElementById("blockReason").value.trim() || "Резервиран по телефон";
+            const patientName = document.getElementById("blockPatientName").value.trim();
+            const patientPhoneRaw = document.getElementById("blockPatientPhone").value.trim();
+            const patientPhone = patientPhoneRaw ? "+359 " + normalizePhoneInput(patientPhoneRaw) : "";
+            const paymentMethod = document.getElementById("blockPaymentMethod").value;
+            const note = document.getElementById("blockNote").value.trim();
+            const fullTime = `${dateStr} ${time}`;
+
+            if (!patientName) {
+                alert("Въведете поне две имена на пациента.");
+                return;
+            }
+
+            const nameParts = patientName.split(/\s+/).filter(Boolean);
+            if (nameParts.length < 2) {
+                alert("Въведете поне име и фамилия на пациента.");
+                return;
+            }
+
+            if (patientPhoneRaw && normalizePhoneInput(patientPhoneRaw).length !== 9) {
+                alert("Телефонът трябва да съдържа 9 цифри или оставете полето празно.");
+                return;
+            }
+
+            if (!paymentMethod) {
+                alert("Изберете метод на плащане.");
+                return;
+            }
+
+            try {
+                const response = await fetch("/doctor-block-time", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        doctor_id: Number(doctorId),
+                        time: fullTime,
+                        reason: reason,
+                        patient_name: patientName,
+                        patient_phone: patientPhone,
+                        payment_method: paymentMethod,
+                        note: note
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    renderCalendar();
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            }
+        }
+
+        async function deleteAppointment(id) {
+            if (!confirm("Сигурни ли сте, че искате да премахнете този час?")) return;
+
+            try {
+                const response = await fetch(`/doctor-appointment/${id}`, {
+                    method: "DELETE"
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    closeModal();
+                    renderCalendar();
+                } else {
+                    alert(data.message || "Възникна грешка.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка при свързване със сървъра.");
+            }
+        }
+
+        function openCancellationModal(cancellation) {
+            const timeStr = cancellation.appointment_time.replace("T", " ");
+            const html = `
+                <div class="dd-modal-icon dd-modal-icon-cancelled">⚠️</div>
+                <h3>Час отказан от пациент</h3>
+
+                <p class="dd-modal-note">
+                    Пациентът отмени запазения час. Този час е свободен и може да приеме нов запис.
+                </p>
+
+                <div class="dd-modal-info">
+                    <div class="dd-modal-row">
+                        <span>Пациент:</span>
+                        <strong>${cancellation.patient_name || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Телефон:</span>
+                        <strong>${cancellation.patient_phone || "—"}</strong>
+                    </div>
+                    <div class="dd-modal-row">
+                        <span>Беше за:</span>
+                        <strong>${timeStr}</strong>
+                    </div>
+                    <div class="dd-modal-row dd-modal-row-stack">
+                        <span>Причина:</span>
+                        <strong>${cancellation.reason || "—"}</strong>
+                    </div>
+                </div>
+
+                <div class="dd-modal-actions">
+                    <button class="dd-btn-secondary" onclick="closeModal()">Затвори</button>
+                    <button class="dd-btn-primary" onclick="dismissPatientCancellation(${cancellation.id})">Разбрах</button>
+                </div>
+            `;
+            openModal(html);
+        }
+
+        async function dismissPatientCancellation(cancellationId) {
+            try {
+                await fetch(`/doctor-dismiss-cancellation/${cancellationId}`, {
+                    method: "POST"
+                });
+                closeModal();
+                renderCalendar();
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка.");
+            }
+        }
+
+        async function dismissAllPatientCancellations() {
+            if (!confirm("Маркирай всички отказани часове като прочетени?")) return;
+
+            try {
+                for (const c of patientCancellations) {
+                    await fetch(`/doctor-dismiss-cancellation/${c.id}`, {
+                        method: "POST"
+                    });
+                }
+                renderCalendar();
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка.");
+            }
+        }
+
+        async function init() {
+            await loadDoctor();
+            await loadReviews();
+            currentWeekStart = getMonday(new Date());
+        }
+
+        init();
+    </script>
+
+</body>
+</html>
