@@ -1,38 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="bg">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Профил на лекар</title>
 
-    <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="/static/style.css?v=904">
 </head>
 
 <body>
 
+    <a class="app-logo" onclick="goHome()">
+        <img src="/static/logo.png" alt="Medical App" class="app-logo-img">
+    </a>
+
     <div class="profile-button" onclick="openProfile()">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="34"
+            height="34"
+            fill="currentColor"
+            viewBox="0 0 16 16"
+        >
+            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="34"
-        height="34"
-        fill="currentColor"
-        viewBox="0 0 16 16"
-    >
-        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path
+                fill-rule="evenodd"
+                d="M8 9a5 5 0 0 0-5 5 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5 5 5 0 0 0-5-5z"
+            />
+        </svg>
+    </div>
 
-        <path
-        fill-rule="evenodd"
-        d="M8 9a5 5 0 0 0-5 5 .5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5 5 5 0 0 0-5-5z"/>
-    </svg>
+    <div class="container doctor-profile-container">
 
-</div>
-
-    <div class="container py-5">
-
-        <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex justify-content-between mb-4 doctor-profile-buttons">
             <button class="btn btn-outline-secondary" onclick="goBack()">
                 Назад
             </button>
@@ -42,10 +52,10 @@
             </button>
         </div>
 
-        <div class="card shadow-lg border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
+        <div class="card shadow-lg border-0 rounded-4 mb-4 doctor-main-card">
+            <div class="card-body">
 
-                <h1 id="doctorName" class="text-primary mb-3"></h1>
+                <h1 id="doctorName" class="text-primary mb-3 doctor-name"></h1>
 
                 <div class="doctor-info-grid">
 
@@ -71,7 +81,7 @@
 
                     <div class="doctor-info-item">
                         <strong>Рейтинг:</strong>
-                        ⭐ <span id="rating"></span> / 5
+                        <span id="rating"></span>
                     </div>
 
                     <div class="doctor-info-item">
@@ -95,56 +105,48 @@
             </div>
         </div>
 
-        <div class="card shadow border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
+        <div class="card shadow border-0 rounded-4 mt-4">
+            <div class="card-body">
 
-                <h2>Информация за лекаря</h2>
+                <h2 class="mb-3">Информация за лекаря</h2>
 
                 <div class="doctor-section">
+                    <h5 class="doctor-section-title">
+                        Описание
+                    </h5>
 
-    <h5 class="doctor-section-title">
-        Описание
-    </h5>
+                    <p id="description" class="doctor-section-text"></p>
+                </div>
 
-    <p id="description" class="doctor-section-text"></p>
+                <div class="doctor-section">
+                    <h5 class="doctor-section-title">
+                        Образование
+                    </h5>
 
-</div>
+                    <p id="education" class="doctor-section-text"></p>
+                </div>
 
-<div class="doctor-section">
+                <div class="doctor-section">
+                    <h5 class="doctor-section-title">
+                        Квалификации
+                    </h5>
 
-    <h5 class="doctor-section-title">
-        Образование
-    </h5>
+                    <ul id="qualifications" class="qualification-list"></ul>
+                </div>
 
-    <p id="education" class="doctor-section-text"></p>
+                <div class="doctor-section">
+                    <h5 class="doctor-section-title">
+                        Биография
+                    </h5>
 
-</div>
-
-<div class="doctor-section">
-
-    <h5 class="doctor-section-title">
-        Квалификации
-    </h5>
-
-    <ul id="qualifications" class="qualification-list"></ul>
-
-</div>
-
-<div class="doctor-section">
-
-    <h5 class="doctor-section-title">
-        Биография
-    </h5>
-
-    <p id="biography" class="doctor-section-text"></p>
-
-</div>
+                    <p id="biography" class="doctor-section-text"></p>
+                </div>
 
             </div>
         </div>
 
         <div class="card shadow border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
+            <div class="card-body">
 
                 <h2 class="mb-4">Запазване на час</h2>
 
@@ -152,18 +154,29 @@
                 <input type="date" id="date" class="form-control mb-3">
 
                 <label class="form-label">Свободни часове:</label>
+
+                <div class="alert alert-warning appointment-warning-message">
+                    <strong>Важно</strong>
+
+                    <ul class="mb-0 mt-2">
+                        <li>
+                            Час може да бъде запазен най-късно до 30 минути преди началото на прегледа.
+                        </li>
+                    </ul>
+                </div>
+
                 <div id="timeSlots" class="time-slots mb-3"></div>
                 <input type="hidden" id="selectedTime">
 
-                <button class="btn btn-primary" onclick="bookAppointment()">
+                <button class="btn btn-primary appointment-button" onclick="bookAppointment()">
                     Запази час
                 </button>
 
             </div>
         </div>
 
-        <div class="card shadow border-0 rounded-4 mb-4">
-            <div class="card-body p-4">
+        <div class="card shadow border-0 rounded-4 mb-4" id="leaveReviewSection">
+            <div class="card-body">
 
                 <h2 class="mb-4">Остави отзив</h2>
 
@@ -180,10 +193,10 @@
                     id="reviewComment"
                     rows="4"
                     class="form-control mb-3"
-                    placeholder="Напишете коментар за лекаря"
+                    placeholder="Коментар по желание"
                 ></textarea>
 
-                <button class="btn btn-success" onclick="addReview()">
+                <button class="btn btn-success review-button" onclick="addReview()">
                     Добави отзив
                 </button>
 
@@ -191,7 +204,7 @@
         </div>
 
         <div class="card shadow border-0 rounded-4">
-            <div class="card-body p-4">
+            <div class="card-body">
 
                 <h2 class="mb-4">Отзиви от пациенти</h2>
 
@@ -201,6 +214,9 @@
         </div>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bg.js"></script>
 
     <script>
         const username = localStorage.getItem("username");
@@ -220,6 +236,192 @@
         ];
 
         let selectedTime = "";
+        let doctorDayOffDates = new Map();
+        let datePickerInstance = null;
+
+        const EXTRA_NON_WORKING_DAYS = new Set([
+            "2026-01-02"
+        ]);
+
+        function formatLocalDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function addDays(date, days) {
+            const result = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
+        function getOrthodoxEasterDate(year) {
+            const a = year % 4;
+            const b = year % 7;
+            const c = year % 19;
+            const d = (19 * c + 15) % 30;
+            const e = (2 * a + 4 * b - d + 34) % 7;
+            const month = Math.floor((d + e + 114) / 31);
+            const day = ((d + e + 114) % 31) + 1;
+
+            return addDays(new Date(year, month - 1, day), 13);
+        }
+
+        function nextWorkingDayAfter(date, usedDays) {
+            let nextDay = addDays(date, 1);
+
+            while (nextDay.getDay() === 0 || nextDay.getDay() === 6 || usedDays.has(formatLocalDate(nextDay))) {
+                nextDay = addDays(nextDay, 1);
+            }
+
+            return nextDay;
+        }
+
+        function getBulgarianNonWorkingDays(year) {
+            const fixedHolidays = [
+                new Date(year, 0, 1),
+                new Date(year, 2, 3),
+                new Date(year, 4, 1),
+                new Date(year, 4, 6),
+                new Date(year, 4, 24),
+                new Date(year, 8, 6),
+                new Date(year, 8, 22),
+                new Date(year, 11, 24),
+                new Date(year, 11, 25),
+                new Date(year, 11, 26)
+            ];
+
+            const easter = getOrthodoxEasterDate(year);
+            const easterHolidays = [
+                addDays(easter, -2),
+                addDays(easter, -1),
+                easter,
+                addDays(easter, 1)
+            ];
+
+            const nonWorkingDays = new Set([
+                ...fixedHolidays.map(formatLocalDate),
+                ...easterHolidays.map(formatLocalDate),
+                ...EXTRA_NON_WORKING_DAYS
+            ]);
+
+            fixedHolidays.forEach(holiday => {
+                if (holiday.getDay() === 0 || holiday.getDay() === 6) {
+                    nonWorkingDays.add(formatLocalDate(nextWorkingDayAfter(holiday, nonWorkingDays)));
+                }
+            });
+
+            return nonWorkingDays;
+        }
+
+        function isNonWorkingDateObject(date) {
+            const day = date.getDay();
+
+            if (day === 0 || day === 6) {
+                return true;
+            }
+
+            const holidays = getBulgarianNonWorkingDays(date.getFullYear());
+            return holidays.has(formatLocalDate(date));
+        }
+
+        function isNonWorkingDateString(dateString) {
+            if (!dateString) {
+                return false;
+            }
+
+            const [year, month, day] = dateString.split("-").map(Number);
+            return isNonWorkingDateObject(new Date(year, month - 1, day));
+        }
+
+        function getNonWorkingMessage(dateString) {
+            if (!dateString) {
+                return "";
+            }
+
+            const [year, month, day] = dateString.split("-").map(Number);
+            const selectedDate = new Date(year, month - 1, day);
+            const dayOfWeek = selectedDate.getDay();
+
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                return "Избраната дата е събота или неделя. Моля, изберете работен ден.";
+            }
+
+            return "Избраната дата е официален почивен ден. Моля, изберете работен ден.";
+        }
+
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const day = String(today.getDate()).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
+        }
+
+        function getMonthRange(date) {
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            return {
+                start: formatLocalDate(addDays(firstDay, -7)),
+                end: formatLocalDate(addDays(lastDay, 7))
+            };
+        }
+
+        function isDoctorDayOffDateObject(date) {
+            return doctorDayOffDates.has(formatLocalDate(date));
+        }
+
+        function isDoctorDayOffDateString(dateString) {
+            return doctorDayOffDates.has(dateString);
+        }
+
+        async function loadDoctorDayOffsForMonth(date) {
+            const range = getMonthRange(date);
+
+            try {
+                const response = await fetch(`/doctor-day-offs-range/${doctorId}?start_date=${range.start}&end_date=${range.end}`);
+                const days = await response.json();
+
+                if (!Array.isArray(days)) {
+                    return;
+                }
+
+                days.forEach(day => {
+                    doctorDayOffDates.set(day.off_date, {
+                        reason: day.reason || "Неработен ден",
+                        note: day.note || ""
+                    });
+                });
+
+                if (datePickerInstance) {
+                    datePickerInstance.redraw();
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function isTimeTooSoon(time) {
+            const selectedDate = document.getElementById("date").value;
+            const today = getTodayDate();
+
+            if (selectedDate !== today) {
+                return false;
+            }
+
+            const now = new Date();
+            const limitTime = new Date(now.getTime() + 30 * 60 * 1000);
+
+            const [hours, minutes] = time.split(":").map(Number);
+
+            const slotTime = new Date();
+            slotTime.setHours(hours, minutes, 0, 0);
+
+            return slotTime <= limitTime;
+        }
 
         function fillTimes(busyTimes = []) {
             const timeSlots = document.getElementById("timeSlots");
@@ -227,13 +429,24 @@
             selectedTime = "";
             document.getElementById("selectedTime").value = "";
 
+            const selectedDate = document.getElementById("date").value;
+
+            if (isNonWorkingDateString(selectedDate)) {
+                timeSlots.innerHTML = `
+                    <div class="non-working-message">
+                        ${getNonWorkingMessage(selectedDate)}
+                    </div>
+                `;
+                return;
+            }
+
             allTimes.forEach(time => {
                 const button = document.createElement("button");
 
                 button.textContent = time;
                 button.type = "button";
 
-                if (busyTimes.includes(time)) {
+                if (busyTimes.includes(time) || isTimeTooSoon(time)) {
                     button.className = "time-slot busy";
                     button.disabled = true;
                 } else {
@@ -264,7 +477,7 @@
             document.getElementById("city").innerText = doctor.city;
             document.getElementById("address").innerText = doctor.address;
             document.getElementById("phone").innerText = doctor.phone;
-            document.getElementById("rating").innerText = doctor.rating;
+            document.getElementById("rating").innerText = "Няма оценки";
             document.getElementById("experience").innerText = doctor.experience;
 
             const fullAddress = `${doctor.address}, ${doctor.city}, България`;
@@ -273,26 +486,22 @@
 
             document.getElementById("description").innerText = doctor.description;
             document.getElementById("education").innerText = doctor.education;
-            const qualificationsList =
-    document.getElementById("qualifications");
 
-qualificationsList.innerHTML = "";
+            const qualificationsList = document.getElementById("qualifications");
+            qualificationsList.innerHTML = "";
 
-if (doctor.qualifications) {
+            if (doctor.qualifications) {
+                const qualifications = doctor.qualifications.split(";");
 
-    const qualifications =
-        doctor.qualifications.split(";");
+                qualifications.forEach(item => {
+                    if (item.trim() !== "") {
+                        qualificationsList.innerHTML += `
+                            <li>${item.trim()}</li>
+                        `;
+                    }
+                });
+            }
 
-    qualifications.forEach(item => {
-
-        if (item.trim() !== "") {
-
-            qualificationsList.innerHTML += `
-                <li>${item.trim()}</li>
-            `;
-        }
-    });
-}
             document.getElementById("biography").innerText = doctor.biography;
         }
 
@@ -300,6 +509,13 @@ if (doctor.qualifications) {
             const date = document.getElementById("date").value;
 
             if (date === "") {
+                fillTimes();
+                return;
+            }
+
+            if (isDoctorDayOffDateString(date)) {
+                alert("Тази дата е маркирана като неработна за лекаря и не може да бъде избрана.");
+                document.getElementById("date").value = "";
                 fillTimes();
                 return;
             }
@@ -313,14 +529,35 @@ if (doctor.qualifications) {
         async function bookAppointment() {
             const date = document.getElementById("date").value;
             const time = document.getElementById("selectedTime").value;
+            const today = getTodayDate();
 
             if (date === "") {
                 alert("Избери дата");
                 return;
             }
 
+            if (date < today) {
+                alert("Не може да запазиш час за минала дата");
+                return;
+            }
+
+            if (isNonWorkingDateString(date)) {
+                alert(getNonWorkingMessage(date));
+                return;
+            }
+
+            if (isDoctorDayOffDateString(date)) {
+                alert("Тази дата е маркирана като неработна за лекаря. Моля, изберете друга дата.");
+                return;
+            }
+
             if (time === "") {
                 alert("Избери свободен час");
+                return;
+            }
+
+            if (isTimeTooSoon(time)) {
+                alert("Този час вече не може да бъде запазен. Моля, изберете по-късен час.");
                 return;
             }
 
@@ -348,7 +585,7 @@ if (doctor.qualifications) {
 
         async function addReview() {
             const rating = document.getElementById("reviewRating").value;
-            const comment = document.getElementById("reviewComment").value;
+            const comment = document.getElementById("reviewComment").value.trim();
 
             const response = await fetch("/reviews", {
                 method: "POST",
@@ -377,9 +614,13 @@ if (doctor.qualifications) {
             const reviews = await response.json();
 
             const list = document.getElementById("reviewsList");
+            const ratingBox = document.getElementById("rating");
+
             list.innerHTML = "";
 
             if (reviews.length === 0) {
+                ratingBox.innerText = "Няма оценки";
+
                 list.innerHTML = `
                     <li class="list-group-item">
                         Все още няма отзиви за този лекар.
@@ -388,20 +629,71 @@ if (doctor.qualifications) {
                 return;
             }
 
+            let totalRating = 0;
+
             reviews.forEach(review => {
+                totalRating += Number(review.rating);
+
                 const li = document.createElement("li");
 
                 li.className = "list-group-item";
 
-                li.innerHTML = `
-                    <strong>${review.username}</strong>
-                    <span class="text-warning">${review.rating} ⭐</span>
-                    <br>
-                    ${review.comment}
-                `;
+                const commentText = review.comment ? review.comment.trim() : "";
+
+                if (commentText !== "") {
+                    li.innerHTML = `
+                        <strong>${review.username}</strong>
+                        <span class="text-warning">${review.rating} ⭐</span>
+                        <br>
+                        ${commentText}
+                    `;
+                } else {
+                    li.innerHTML = `
+                        <strong>${review.username}</strong>
+                        <span class="text-warning">${review.rating} ⭐</span>
+                    `;
+                }
 
                 list.appendChild(li);
             });
+
+            const averageRating = totalRating / reviews.length;
+
+            ratingBox.innerText = `⭐ ${averageRating.toFixed(1)} / 5`;
+        }
+
+        function scrollToLeaveReviewSection() {
+            const reviewSection = document.getElementById("leaveReviewSection");
+
+            if (!reviewSection) {
+                return;
+            }
+
+            const sectionPosition =
+                reviewSection.getBoundingClientRect().top + window.pageYOffset;
+
+            window.scrollTo({
+                top: sectionPosition - 20,
+                behavior: "smooth"
+            });
+        }
+
+        function scrollToReviewSectionIfNeeded() {
+            const params = new URLSearchParams(window.location.search);
+            const shouldScrollToReview =
+                params.get("review") === "1" || window.location.hash === "#leaveReviewSection";
+
+            if (!shouldScrollToReview) {
+                return;
+            }
+
+            setTimeout(scrollToLeaveReviewSection, 200);
+            setTimeout(scrollToLeaveReviewSection, 600);
+            setTimeout(scrollToLeaveReviewSection, 1000);
+        }
+
+        function goHome() {
+            window.location.href = "/search";
         }
 
         function goBack() {
@@ -410,22 +702,89 @@ if (doctor.qualifications) {
 
         function logout() {
             localStorage.removeItem("username");
+            localStorage.removeItem("bookingData");
             window.location.href = "/";
         }
-
-        document.getElementById("date").addEventListener("change", updateAvailableTimes);
-
-        const today = new Date().toISOString().split("T")[0];
-        document.getElementById("date").min = today;
-
-        fillTimes();
-        loadDoctor();
-        loadReviews();
 
         function openProfile() {
             window.location.href = "/my-profile";
         }
 
+        const dateInput = document.getElementById("date");
+
+        datePickerInstance = flatpickr(dateInput, {
+            locale: "bg",
+            dateFormat: "Y-m-d",
+            minDate: getTodayDate(),
+            disableMobile: true,
+            disable: [
+                function(date) {
+                    return isNonWorkingDateObject(date) || isDoctorDayOffDateObject(date);
+                }
+            ],
+            onReady: async function(selectedDates, dateStr, fp) {
+                await loadDoctorDayOffsForMonth(fp.currentYear ? new Date(fp.currentYear, fp.currentMonth, 1) : new Date());
+            },
+            onMonthChange: async function(selectedDates, dateStr, fp) {
+                await loadDoctorDayOffsForMonth(new Date(fp.currentYear, fp.currentMonth, 1));
+            },
+            onYearChange: async function(selectedDates, dateStr, fp) {
+                await loadDoctorDayOffsForMonth(new Date(fp.currentYear, fp.currentMonth, 1));
+            },
+            onChange: function () {
+                updateAvailableTimes();
+            },
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                if (isNonWorkingDateObject(dayElem.dateObj)) {
+                    dayElem.classList.add("non-working-day");
+                    dayElem.title = "Почивен ден";
+                }
+
+                if (isDoctorDayOffDateObject(dayElem.dateObj)) {
+                    dayElem.classList.add("non-working-day");
+                    const dayInfo = doctorDayOffDates.get(formatLocalDate(dayElem.dateObj));
+                    dayElem.title = `Лекарят не приема пациенти. Причина: ${dayInfo?.reason || "неработен ден"}`;
+                }
+            }
+        });
+
+        dateInput.addEventListener("change", function () {
+            const selectedDate = dateInput.value;
+            const today = getTodayDate();
+
+            if (selectedDate !== "" && selectedDate < today) {
+                alert("Не може да избереш минала дата");
+                dateInput.value = "";
+                fillTimes();
+                return;
+            }
+
+            if (isNonWorkingDateString(selectedDate)) {
+                alert(getNonWorkingMessage(selectedDate));
+                dateInput.value = "";
+                fillTimes();
+                return;
+            }
+
+            if (isDoctorDayOffDateString(selectedDate)) {
+                alert("Тази дата е маркирана като неработна за лекаря и не може да бъде избрана.");
+                dateInput.value = "";
+                fillTimes();
+                return;
+            }
+
+            updateAvailableTimes();
+        });
+
+        async function initializePage() {
+            await loadDoctorDayOffsForMonth(new Date());
+            fillTimes();
+            await loadDoctor();
+            await loadReviews();
+            scrollToReviewSectionIfNeeded();
+        }
+
+        initializePage();
     </script>
 
 </body>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Моите отказани часове - Medical App</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="/static/style.css?v=414">
+
+    <style>
+
+        body {
+            min-height: 100vh;
+        }
+
+        .mc-container {
+            margin-top: 210px !important;
+            margin-bottom: 70px !important;
+            padding: 44px 48px !important;
+            max-width: 1160px !important;
+            background: rgba(255, 255, 255, 0.82) !important;
+            border-radius: 30px !important;
+            box-shadow: 0 20px 50px rgba(11, 31, 75, 0.16) !important;
+            border: 1px solid rgba(255, 255, 255, 0.65) !important;
+            backdrop-filter: blur(18px) saturate(1.4);
+            -webkit-backdrop-filter: blur(18px) saturate(1.4);
+        }
+
+        .mc-header {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            gap: 20px !important;
+            margin-bottom: 24px !important;
+        }
+
+        .mc-title {
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            color: #0d6efd !important;
+            font-size: 42px !important;
+            font-weight: 800 !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
+            letter-spacing: -0.03em;
+        }
+
+        .mc-subtitle {
+            color: #475569 !important;
+            font-size: 18px !important;
+            line-height: 1.6 !important;
+            margin-bottom: 28px !important;
+        }
+
+        .mc-back-button {
+            width: auto !important;
+            min-width: 230px !important;
+            padding: 11px 20px !important;
+            font-weight: 800 !important;
+            border-radius: 12px !important;
+            white-space: nowrap !important;
+        }
+
+        #cancellationsList .alert {
+            border-radius: 12px !important;
+            padding: 18px 22px !important;
+            font-size: 17px !important;
+            margin-bottom: 0 !important;
+        }
+
+        .mp-cancellation-card {
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(13, 110, 253, 0.14);
+            border-left: 5px solid #0d6efd;
+            border-radius: 20px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 25px rgba(11, 31, 75, 0.10);
+        }
+
+        .mp-cancellation-card.mp-seen {
+            opacity: 0.82;
+            border-left-color: #94a3b8;
+        }
+
+        .mp-cancellation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .mp-cancellation-header strong {
+            color: #0B1F4B;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .mp-new-badge {
+            background: #0d6efd;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 5px 11px;
+            border-radius: 999px;
+        }
+
+        .mp-cancellation-spec {
+            color: #0d6efd;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .mp-cancellation-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #334155;
+            font-size: 16px;
+        }
+
+        .mp-cancellation-label {
+            font-weight: 800;
+            color: #0B1F4B;
+        }
+
+        .mp-cancellation-reason {
+            margin-top: 14px;
+            background: #eff6ff;
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(13, 110, 253, 0.12);
+        }
+
+        .mp-cancellation-reason p {
+            margin: 8px 0 0;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .mp-cancellation-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .mp-cancellation-seen-label {
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .mc-container {
+                margin-top: 145px !important;
+                width: calc(100% - 28px) !important;
+                padding: 22px !important;
+                border-radius: 24px !important;
+            }
+
+            .mc-header {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 16px !important;
+            }
+
+            .mc-title {
+                text-align: center !important;
+                font-size: 30px !important;
+            }
+
+            .mc-subtitle {
+                text-align: center !important;
+                font-size: 15.5px !important;
+                margin-bottom: 22px !important;
+            }
+
+            .mc-back-button {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            .mp-cancellation-card {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            .mp-cancellation-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .mp-cancellation-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .mp-cancellation-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .mp-cancellation-footer .btn,
+            .mp-cancellation-footer button {
+                width: 100% !important;
+                margin-bottom: 0 !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mc-container {
+                margin-top: 135px !important;
+                width: calc(100% - 20px) !important;
+                padding: 18px !important;
+                border-radius: 20px !important;
+            }
+
+            .mc-title {
+                font-size: 27px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <a class="app-logo" onclick="goHome()">
+        <img src="/static/logo.png" alt="Medical App" class="app-logo-img">
+    </a>
+
+    <div class="container mc-container">
+
+        <div class="mc-header">
+            <h1 class="mc-title">
+                ⚠️ Отказани часове
+            </h1>
+
+            <button class="btn btn-outline-secondary mc-back-button" onclick="goBack()">
+                ← Назад към профила
+            </button>
+        </div>
+
+        <p class="mc-subtitle">
+            Тук виждате всички часове, които са били отменени от Вашите лекари с посочена причина.
+        </p>
+
+        <div id="cancellationsList">
+            <div class="alert alert-secondary">Зареждане...</div>
+        </div>
+
+    </div>
+
+    <script>
+        const username = localStorage.getItem("username");
+
+        if (!username) {
+            window.location.href = "/";
+        }
+
+        function goHome() {
+            window.location.href = "/search";
+        }
+
+        function goBack() {
+            window.location.href = "/my-profile";
+        }
+
+        function formatCancellationDate(dateStr) {
+            try {
+                if (!dateStr) return "—";
+
+                const cleaned = dateStr.replace("T", " ").split(".")[0];
+                const parts = cleaned.split(" ");
+
+                if (parts.length === 2) {
+                    const dateParts = parts[0].split("-");
+                    return `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}, ${parts[1].substring(0, 5)} ч.`;
+                }
+
+                return dateStr;
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        async function loadAllCancellations() {
+            try {
+                const response = await fetch(`/my-cancellations?username=${encodeURIComponent(username)}`);
+                const cancellations = await response.json();
+
+                const list = document.getElementById("cancellationsList");
+
+                if (!Array.isArray(cancellations) || cancellations.length === 0) {
+                    list.innerHTML = `
+                        <div class="alert alert-success">
+                            🎉 Нямате отказани часове.
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = "";
+
+                cancellations.forEach(c => {
+                    const item = document.createElement("div");
+                    item.className = "mp-cancellation-card" + (c.seen ? " mp-seen" : "");
+
+                    const appointmentDate = formatCancellationDate(c.appointment_time);
+                    const cancelledOn = formatCancellationDate(c.created_at);
+
+                    const newBadge = !c.seen
+                        ? '<span class="mp-new-badge">Ново</span>'
+                        : '';
+
+                    const actionBtn = !c.seen
+                        ? `<button class="btn btn-sm btn-outline-secondary" onclick="dismissCancellation(${c.id})">Отбележи като прочетено</button>`
+                        : '<span class="mp-cancellation-seen-label">Прочетено</span>';
+
+                    item.innerHTML = `
+                        <div class="mp-cancellation-header">
+                            <strong>${c.doctor_name || "—"}</strong>
+                            ${newBadge}
+                        </div>
+
+                        <div class="mp-cancellation-spec">${c.specialty || ""}</div>
+
+                        <div class="mp-cancellation-row">
+                            <span class="mp-cancellation-label">Запазен час:</span>
+                            <span>${appointmentDate}</span>
+                        </div>
+
+                        <div class="mp-cancellation-row">
+                            <span class="mp-cancellation-label">Отказан на:</span>
+                            <span>${cancelledOn}</span>
+                        </div>
+
+                        <div class="mp-cancellation-reason">
+                            <span class="mp-cancellation-label">Причина от лекаря:</span>
+                            <p>${c.reason || "—"}</p>
+                        </div>
+
+                        <div class="mp-cancellation-footer">
+                            ${actionBtn}
+                            <button class="btn btn-sm btn-primary" onclick="bookNewAppointmentFor('${(c.doctor_name || '').replace(/'/g, "\\'")}', '${(c.specialty || '').replace(/'/g, "\\'")}')">
+                                📅 Запази нов час
+                            </button>
+                        </div>
+                    `;
+
+                    list.appendChild(item);
+                });
+
+            } catch (err) {
+                console.error(err);
+
+                document.getElementById("cancellationsList").innerHTML = `
+                    <div class="alert alert-danger">
+                        Възникна грешка при зареждане.
+                    </div>
+                `;
+            }
+        }
+
+        async function dismissCancellation(cancellationId) {
+            try {
+                await fetch(`/dismiss-cancellation/${cancellationId}`, {
+                    method: "POST"
+                });
+
+                loadAllCancellations();
+            } catch (err) {
+                console.error(err);
+                alert("Възникна грешка.");
+            }
+        }
+
+        async function bookNewAppointmentFor(doctorName, specialty) {
+            try {
+                const response = await fetch(`/doctors-data?name=${encodeURIComponent(doctorName)}&specialty=${encodeURIComponent(specialty)}`);
+                const doctors = await response.json();
+
+                if (doctors && doctors.length > 0) {
+                    window.location.href = `/doctor/${doctors[0].id}`;
+                } else {
+                    alert("Не успяхме да намерим профила на лекаря.");
+                    window.location.href = "/search";
+                }
+            } catch (err) {
+                console.error(err);
+                window.location.href = "/search";
+            }
+        }
+
+        loadAllCancellations();
+    </script>
+
+</body>
+</html>
